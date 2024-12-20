@@ -1,12 +1,13 @@
 import * as React from 'react';
+import {useNavigate} from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import Popover from '@mui/material/Popover';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import IconPopover from "../components/IconPopover.tsx";
 
 const ongoingTournamentsRows = [
   {id: 1, name: 'Autumn Championship', hasPassed: true},
@@ -32,21 +33,14 @@ const plannedTournamentsRows = [
 ];
 
 export default function TournamentsPage() {
-  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
-  const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handlePopoverClose = () => {
-    setAnchorEl(null);
-  };
-  const isPopoverOpen = Boolean(anchorEl);
+  const navigate = useNavigate();
   return (
     <Box sx={{padding: 2}}>
       <Stack direction="row" alignItems="center" sx={{marginBottom: 2}}>
         <Button
           variant="text"
           startIcon={<ArrowBackIcon/>}
-          onClick={() => window.history.back()}
+          onClick={() => navigate(-1)}
         >
         </Button>
         <Typography variant="h4">Tournaments</Typography>
@@ -64,13 +58,9 @@ export default function TournamentsPage() {
                   <td style={{border: '1px solid #ccc', padding: '8px', display: 'flex', alignItems: 'center'}}>
                     {row.name}
                     {row.hasPassed && (
-                      <Box
-                        sx={{display: 'inline-flex', alignItems: 'center', marginLeft: 1}}
-                        onMouseEnter={handlePopoverOpen}
-                        onMouseLeave={handlePopoverClose}
-                      >
-                        <ErrorOutlineIcon sx={{color: '#ff726f', fontSize: '16px'}}/>
-                      </Box>
+                      <IconPopover icon={<ErrorOutlineIcon sx={{color: '#ff726f', fontSize: '16px'}}/>}
+                                   typography={<Typography sx={{padding: 1, color: 'red'}}>Registration
+                                     Closed</Typography>}/>
                     )}
                   </td>
                 </tr>
@@ -99,19 +89,14 @@ export default function TournamentsPage() {
         </Box>
       </Box>
       <Stack alignItems="center">
-        <Button variant="contained" color="primary">Host a tournament</Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => navigate('/host')}
+        >
+          Host a tournament
+        </Button>
       </Stack>
-      <Popover
-        open={isPopoverOpen}
-        anchorEl={anchorEl}
-        onClose={handlePopoverClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-      >
-        <Typography sx={{padding: 1, color: 'red'}}>Registration Closed</Typography>
-      </Popover>
     </Box>
   );
 }

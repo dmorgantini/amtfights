@@ -3,6 +3,8 @@ import {createRoot} from 'react-dom/client'
 import App from './App.tsx'
 import DashboardPage from './pages';
 import TournamentsPage from './pages/tournaments.tsx';
+import HostATournamentPage from './pages/hostATournament.tsx';
+import TournamentPage from './pages/tournament.tsx';
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import Layout from "./layouts/dashboard.tsx";
 import {CssBaseline} from "@mui/material";
@@ -19,6 +21,14 @@ const router = createBrowserRouter([{
         path: 'tournaments',
         Component: TournamentsPage,
       },
+      {
+        path: 'host',
+        Component: HostATournamentPage,
+      },
+      {
+        path: 'tournament/:id',
+        Component: TournamentPage,
+      }
     ],
   }]
 }])
