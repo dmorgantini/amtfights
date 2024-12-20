@@ -2,7 +2,7 @@ import {StrictMode} from 'react'
 import {createRoot} from 'react-dom/client'
 import App from './App.tsx'
 import DashboardPage from './pages';
-import OrdersPage from './pages/orders';
+import TournamentsPage from './pages/tournaments.tsx';
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import Layout from "./layouts/dashboard.tsx";
 import {CssBaseline} from "@mui/material";
@@ -16,8 +16,8 @@ const router = createBrowserRouter([{
         Component: DashboardPage,
       },
       {
-        path: 'orders',
-        Component: OrdersPage,
+        path: 'tournaments',
+        Component: TournamentsPage,
       },
     ],
   }]

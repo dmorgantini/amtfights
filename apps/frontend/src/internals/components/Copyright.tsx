@@ -1,7 +1,7 @@
-import * as React from 'react';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function Copyright(props: any) {
   return (
     <Typography
