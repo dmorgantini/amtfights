@@ -20,9 +20,11 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Stack from "@mui/material/Stack";
 import {useNavigate} from "react-router-dom";
 import IconPopover from "../components/IconPopover.tsx";
+import FormatFields from "./components/FormatFields.tsx";
 
 export default function HostATournamentPage() {
   const [formState, setFormState] = React.useState({
+    formatSpecificFields: {}, // Added to manage format-specific fields
     name: "",
     description: "",
     kingdom: "",
@@ -33,8 +35,25 @@ export default function HostATournamentPage() {
     format: "",
   });
 
-  const handleChange = (field: string, value: unknown) => {
-    setFormState({...formState, [field]: value});
+    const handleChange = (field: string, value: unknown) => {
+    if (field === "format") {
+      setFormState({
+        ...formState,
+        formatSpecificFields: {},
+        format: value as string,
+      });
+    } else {
+      setFormState({...formState, [field]: value});
+    }
+  };
+  const handleFormatFieldChange = (field: string, value: unknown) => {
+    setFormState({
+      ...formState,
+      formatSpecificFields: {
+        ...formState.formatSpecificFields,
+        [field]: value,
+      },
+    });
   };
   const navigate = useNavigate();
 
@@ -120,7 +139,7 @@ export default function HostATournamentPage() {
                 />
               }
             />
-            <IconPopover icon={<HelpOutlineIcon sx={{fontSize: '16px', ml:-4}}/>}
+            <IconPopover icon={<HelpOutlineIcon sx={{fontSize: '16px', ml: -4}}/>}
                          typography={<Typography sx={{padding: 1}}>If Strict Cutoff is checked, the app will close
                            registration when the cutoff time passes</Typography>}/>
           </Box>
@@ -135,10 +154,12 @@ export default function HostATournamentPage() {
           onChange={(e) => handleChange("format", e.target.value)}
           label="Format"
         >
-          <MenuItem value="Single Elimination">Single Elimination</MenuItem>
-          <MenuItem value="Double Elimination">Double Elimination</MenuItem>
+          <MenuItem value="texasTwoStepFormat">Texas Two-Step</MenuItem>
+          <MenuItem value="doubleEliminationFormat">Double Elimination</MenuItem>
         </Select>
       </FormControl>
+      <FormatFields format={formState.format} values={formState.formatSpecificFields}
+                    onChange={handleFormatFieldChange}/>
     </Box>
   );
 }
