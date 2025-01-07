@@ -22,8 +22,8 @@ type Formats = {
 
 const formats: Formats = {
   texasTwoStepFormat: [
-    {field: "finalFights", label: "Final Fights", type: "dropdown", options: ["1", "3", "5", "7", "First to 10"]},
-    {field: "bracketFights", label: "Bracket Fights", type: "dropdown", options: ["1", "3", "5", "7", "First to 10"]},
+    {field: "finalFights", label: "Fight in Final", type: "dropdown", options: ["1", "3", "5", "7", "First to 10"]},
+    {field: "bracketFights", label: "Fights in Bracket", type: "dropdown", options: ["1", "3", "5", "7", "First to 10"]},
     {field: "pitLength", label: "Pit Length", type: "dropdown", options: ["5 mins", "10 mins", "15 mins", "20 mins"]},
     {
       field: "numberOfPits",

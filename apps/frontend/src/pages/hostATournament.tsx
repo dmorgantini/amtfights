@@ -1,26 +1,19 @@
 import React from "react";
-import {
-  Box,
-  Button,
-  Checkbox,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-  Typography,
-  FormControlLabel,
-} from "@mui/material";
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-import {DatePicker, TimePicker} from '@mui/x-date-pickers';
-import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
-import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs from "dayjs";
+import {Box, Button, Typography,} from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Stack from "@mui/material/Stack";
 import {useNavigate} from "react-router-dom";
-import IconPopover from "../components/IconPopover.tsx";
 import FormatFields from "./components/FormatFields.tsx";
+import {TextFieldInput} from "./components/textFieldInput.tsx";
+import {CategorySelect} from "./components/categorySelect.tsx";
+import {DateAndTimePicker} from "./dateAndTimePicker.tsx";
+
+const FormControls = () => (
+  <Stack direction="row" justifyContent="flex-end" spacing={2} sx={{mt: 2}}>
+    <Button variant="outlined">Cancel</Button>
+    <Button variant="contained" color="primary">Submit</Button>
+  </Stack>
+);
 
 export default function HostATournamentPage() {
   const [formState, setFormState] = React.useState({
@@ -35,7 +28,7 @@ export default function HostATournamentPage() {
     format: "",
   });
 
-    const handleChange = (field: string, value: unknown) => {
+  const handleChange = (field: string, value: unknown) => {
     if (field === "format") {
       setFormState({
         ...formState,
@@ -68,98 +61,63 @@ export default function HostATournamentPage() {
         </Button>
         <Typography variant="h4">Host A Tournament</Typography>
       </Stack>
-      <TextField
+      <TextFieldInput
         label="Tournament Name"
-        variant="outlined"
-        size="small"
-        fullWidth
         value={formState.name}
-        onChange={(e) => handleChange("name", e.target.value)}
+        onChange={(value) => handleChange("name", value)}
       />
-      <TextField
+      <TextFieldInput
         label="Tournament Description"
-        variant="outlined"
-        size="small"
-        fullWidth
         multiline
         rows={3}
         value={formState.description}
-        onChange={(e) => handleChange("description", e.target.value)}
+        onChange={(value) => handleChange("description", value)}
         sx={{mt: 2}}
       />
-      <FormControl fullWidth size="small" sx={{mt: 2}}>
-        <InputLabel id="kingdom-label">Kingdom</InputLabel>
-        <Select
-          labelId="kingdom-label"
-          value={formState.kingdom}
-          onChange={(e) => handleChange("kingdom", e.target.value)}
-          label="Kingdom"
-        >
-          <MenuItem value="Dragonspine">Dragonspine</MenuItem>
-          <MenuItem value="Emerald Hills">Emerald Hills</MenuItem>
-        </Select>
-      </FormControl>
-      <FormControl fullWidth size="small" sx={{mt: 2}}>
-        <InputLabel id="park-label">Park</InputLabel>
-        <Select
-          labelId="park-label"
-          value={formState.park}
-          onChange={(e) => handleChange("park", e.target.value)}
-          label="Park"
-        >
-          <MenuItem value="Park 1">Park 1</MenuItem>
-          <MenuItem value="Park 2">Park 2</MenuItem>
-        </Select>
-      </FormControl>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <Box sx={{display: "flex", flexDirection: "column", gap: 2, mt: 2}}>
-          <DatePicker
-            label="Tournament Date"
-            value={formState.date}
-            onChange={(newValue) =>
-              handleChange("date", dayjs(newValue) || null)
-            }
-            slotProps={{textField: {size: "small", fullWidth: true}}}
-          />
-          <Box sx={{display: "flex", alignItems: "center", gap: 2}}>
-            <TimePicker
-              label="Cutoff Time"
-              value={formState.registrationCutoff}
-              slotProps={{textField: {size: "small"}}}
-            />
-            <FormControlLabel
-              label="Strict Cutoff"
-              sx={{whiteSpace: "nowrap"}}
-              control={
-                <Checkbox
-                  checked={formState.strictCutoff}
-                  onChange={(e) =>
-                    handleChange("strictCutoff", e.target.checked)
-                  }
-                />
-              }
-            />
-            <IconPopover icon={<HelpOutlineIcon sx={{fontSize: '16px', ml: -4}}/>}
-                         typography={<Typography sx={{padding: 1}}>If Strict Cutoff is checked, the app will close
-                           registration when the cutoff time passes</Typography>}/>
-          </Box>
-        </Box>
-      </LocalizationProvider>
-      <FormControl fullWidth size="small" sx={{mt: 2}}>
-        <InputLabel id="format-label">Format</InputLabel>
 
-        <Select
-          labelId="format-label"
-          value={formState.format}
-          onChange={(e) => handleChange("format", e.target.value)}
-          label="Format"
-        >
-          <MenuItem value="texasTwoStepFormat">Texas Two-Step</MenuItem>
-          <MenuItem value="doubleEliminationFormat">Double Elimination</MenuItem>
-        </Select>
-      </FormControl>
+      <CategorySelect
+        label="Kingdom"
+        value={formState.kingdom}
+        options={[
+          {value: "Dragonspine", label: "Dragonspine"},
+          {value: "Emerald Hills", label: "Emerald Hills"},
+        ]}
+        onChange={(value) => handleChange("kingdom", value)}
+        sx={{mt: 2}}
+      />
+      <CategorySelect
+        label="Park"
+        value={formState.park}
+        options={[
+          {value: "Park 1", label: "Park 1"},
+          {value: "Park 2", label: "Park 2"},
+        ]}
+        onChange={(value) => handleChange("park", value)}
+        sx={{mt: 2}}
+      />
+      <DateAndTimePicker
+        dateLabel="Tournament Date"
+        dateValue={formState.date}
+        onDateChange={(value) => handleChange("date", value)}
+        timeLabel="Registration Cutoff"
+        timeValue={formState.registrationCutoff}
+        onTimeChange={(value) => handleChange("registrationCutoff", value)}
+        strictCutoff={formState.strictCutoff}
+        onStrictCutoffChange={(value) => handleChange("strictCutoff", value)}
+      />
+      <CategorySelect
+        label="Format"
+        value={formState.format}
+        options={[
+          {value: "texasTwoStepFormat", label: "Texas Two-Step"},
+          {value: "doubleEliminationFormat", label: "Double Elimination"},
+        ]}
+        onChange={(value) => handleChange("format", value)}
+        sx={{mt: 2}}
+      />
       <FormatFields format={formState.format} values={formState.formatSpecificFields}
                     onChange={handleFormatFieldChange}/>
+      <FormControls/>
     </Box>
   );
 }
