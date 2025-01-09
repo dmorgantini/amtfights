@@ -1,12 +1,10 @@
 import React from "react";
 import {FormControl, InputLabel, MenuItem, Select} from "@mui/material";
 
-
 // Props for FormatFields
 interface FormatFieldsProps {
   format: string; // Format configuration object
-  values: Record<string, string>; // Current values for the fields
-  onChange: (field: string, value: string) => void; // Change handler
+  formatFieldsValuesUpdated: (isComplete: boolean, values: Record<string, string>) => void; // Notifies parent if all fields are complete and includes values
 }
 
 type FormatFieldConfig = {
@@ -23,7 +21,12 @@ type Formats = {
 const formats: Formats = {
   texasTwoStepFormat: [
     {field: "finalFights", label: "Fight in Final", type: "dropdown", options: ["1", "3", "5", "7", "First to 10"]},
-    {field: "bracketFights", label: "Fights in Bracket", type: "dropdown", options: ["1", "3", "5", "7", "First to 10"]},
+    {
+      field: "bracketFights",
+      label: "Fights in Bracket",
+      type: "dropdown",
+      options: ["1", "3", "5", "7", "First to 10"]
+    },
     {field: "pitLength", label: "Pit Length", type: "dropdown", options: ["5 mins", "10 mins", "15 mins", "20 mins"]},
     {
       field: "numberOfPits",
@@ -38,12 +41,20 @@ const formats: Formats = {
   ]
 }
 
-const FormatFields: React.FC<FormatFieldsProps> = ({format, values, onChange}) => {
-  if (!format) {
-    return null;
-  }
+const FormatFields: React.FC<FormatFieldsProps> = ({format, formatFieldsValuesUpdated}) => {
+  const [values, setValues] = React.useState<Record<string, string>>({});
   const formatConfig = formats[format];
 
+  React.useEffect(() => {
+    if (!formatConfig) {
+      formatFieldsValuesUpdated(false, {});
+      return;
+    }
+    const isComplete = formatConfig.every((field) => values[field.field] !== undefined && values[field.field] !== "");
+    formatFieldsValuesUpdated(isComplete, values);
+  }, [values, formatConfig, formatFieldsValuesUpdated]);
+
+  if (!format) return null;
   return (
     <>
       {formatConfig.map((field) => {
@@ -54,7 +65,7 @@ const FormatFields: React.FC<FormatFieldsProps> = ({format, values, onChange}) =
               <Select
                 labelId={`${field.field}-label`}
                 value={values[field.field] || ""}
-                onChange={(e) => onChange(field.field, e.target.value)}
+                onChange={(e) => setValues((prev) => ({...prev, [field.field]: e.target.value}))}
                 label={field.label}
               >
                 {field.options.map((option) => (
