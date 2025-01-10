@@ -1,56 +1,15 @@
 import React from "react";
-import {Box, Button, Typography,} from "@mui/material";
-import Stack from "@mui/material/Stack";
+import {Box, Typography,} from "@mui/material";
 import FormatFields from "./components/FormatFields.tsx";
 import {TextFieldInput} from "./components/textFieldInput.tsx";
-import {CategorySelect} from "./components/categorySelect.tsx";
+import {SelectField} from "./components/selectField.tsx";
 import {DateAndTimePicker} from "./dateAndTimePicker.tsx";
-
-import Tooltip from "@mui/material/Tooltip";
-
-interface FormControlsProps {
-  isSubmitDisabled: boolean;
-  tooltipMessage: string;
-}
-
-const FormControls = ({isSubmitDisabled, tooltipMessage}: FormControlsProps) => {
-  const [showTooltip, setShowTooltip] = React.useState(false);
-
-  const handleTouchStart = () => setShowTooltip(true);
-  const handleMouseEnter = () => setShowTooltip(true);
-  const handleMouseLeave = () => setShowTooltip(false);
-
-  return (
-    <Stack direction="row" justifyContent="flex-end" spacing={2} sx={{mt: 2}}>
-      <Button variant="outlined">Cancel</Button>
-      <Tooltip
-        title={tooltipMessage}
-        arrow
-        disableInteractive
-        open={showTooltip}
-        slotProps={{popper: {disablePortal: true}}}
-      >
-        <span
-          onTouchStart={handleTouchStart}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        >
-          <Button
-            variant="outlined"
-            color="primary"
-            disabled={isSubmitDisabled}
-          >
-            Submit
-          </Button>
-        </span>
-      </Tooltip>
-    </Stack>
-  );
-};
+import {FormControls} from "./components/formControls.tsx";
+import CategorySelector from "./components/categorySelector.tsx";
 
 export default function HostATournamentPage() {
   const [formState, setFormState] = React.useState({
-    formatSpecificFields: {}, // Added to manage format-specific fields
+    formatSpecificFields: {},
     formatSpecificFieldsComplete: false,
     name: "",
     description: "",
@@ -60,6 +19,7 @@ export default function HostATournamentPage() {
     registrationCutoff: null,
     strictCutoff: false,
     format: "",
+    categories: [],
   });
 
   const handleChange = (field: string, value: unknown) => setFormState({...formState, [field]: value});
@@ -72,15 +32,17 @@ export default function HostATournamentPage() {
 
   const isSubmitDisabled = !formState.name || !formState.description ||
     !formState.kingdom || !formState.park || !formState.date ||
-    !formState.registrationCutoff || !formState.format || !formState.formatSpecificFieldsComplete;
+    !formState.registrationCutoff || !formState.format || !formState.formatSpecificFieldsComplete ||
+    !formState.categories.length;
 
   const tooltipMessage = isSubmitDisabled
     ? "Please fill out all fields to enable the Submit button."
     : "";
 
   return (
-    <Box sx={{width: "100%", maxWidth: 600, mx: "auto", gap: 2}}>
-      <Typography variant="h4">Host A Tournament</Typography>
+<Box sx={{ width: "100%", maxWidth: 600, mx: "auto", gap: 2, paddingBottom: 4 }}>
+
+<Typography variant="h4" align="center" sx={{ paddingTop: 4, paddingBottom: 4 }}>Host A Tournament</Typography>
       <TextFieldInput
         label="Tournament Name"
         value={formState.name}
@@ -95,7 +57,7 @@ export default function HostATournamentPage() {
         sx={{mt: 2}}
       />
 
-      <CategorySelect
+      <SelectField
         label="Kingdom"
         value={formState.kingdom}
         options={[
@@ -105,7 +67,7 @@ export default function HostATournamentPage() {
         onChange={(value) => handleChange("kingdom", value)}
         sx={{mt: 2}}
       />
-      <CategorySelect
+      <SelectField
         label="Park"
         value={formState.park}
         options={[
@@ -125,7 +87,7 @@ export default function HostATournamentPage() {
         strictCutoff={formState.strictCutoff}
         onStrictCutoffChange={(value) => handleChange("strictCutoff", value)}
       />
-      <CategorySelect
+      <SelectField
         label="Format"
         value={formState.format}
         options={[
@@ -136,6 +98,7 @@ export default function HostATournamentPage() {
         sx={{mt: 2}}
       />
       <FormatFields format={formState.format} formatFieldsValuesUpdated={formatFieldsValuesUpdated}/>
+<CategorySelector onCategoriesChange={(categories) => handleChange("categories", categories)}/>
       <FormControls
         isSubmitDisabled={isSubmitDisabled}
         tooltipMessage={tooltipMessage}

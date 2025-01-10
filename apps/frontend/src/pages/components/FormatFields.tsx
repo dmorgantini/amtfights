@@ -20,10 +20,10 @@ type Formats = {
 
 const formats: Formats = {
   texasTwoStepFormat: [
-    {field: "finalFights", label: "Fight in Final", type: "dropdown", options: ["1", "3", "5", "7", "First to 10"]},
+    {field: "finalFights", label: "Fights in Finals", type: "dropdown", options: ["1", "3", "5", "7", "First to 10"]},
     {
       field: "bracketFights",
-      label: "Fights in Bracket",
+      label: "Fights in Brackets",
       type: "dropdown",
       options: ["1", "3", "5", "7", "First to 10"]
     },

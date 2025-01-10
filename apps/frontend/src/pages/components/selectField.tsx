@@ -1,6 +1,6 @@
 import {FormControl, InputLabel, MenuItem, Select} from "@mui/material";
 
-export const CategorySelect = ({label, value, options, sx, onChange}: {
+export const SelectField = ({label, value, options, sx, onChange}: {
   label: string;
   value: string;
   options: { value: string; label: string }[];
