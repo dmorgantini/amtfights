@@ -3,7 +3,7 @@ import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {Box, Checkbox, FormControlLabel, Typography} from "@mui/material";
 import {DatePicker, TimePicker} from "@mui/x-date-pickers";
-import IconPopover from "../components/IconPopover.tsx";
+import IconPopover from "../../components/IconPopover.tsx";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import dayjs from "dayjs";
 
@@ -16,6 +16,7 @@ interface DateAndTimePickerProps {
   onTimeChange: (value: dayjs.Dayjs | null) => void;
   strictCutoff: boolean;
   onStrictCutoffChange: (value: boolean) => void;
+  readOnly: boolean;
 }
 
 export const DateAndTimePicker: React.FC<DateAndTimePickerProps> = ({
@@ -27,6 +28,7 @@ export const DateAndTimePicker: React.FC<DateAndTimePickerProps> = ({
                                                                       onTimeChange,
                                                                       strictCutoff,
                                                                       onStrictCutoffChange,
+                                                                      readOnly,
                                                                     }) => (
   <LocalizationProvider dateAdapter={AdapterDayjs}>
     <Box sx={{display: "flex", flexDirection: "column", gap: 2, mt: 2}}>
@@ -35,6 +37,7 @@ export const DateAndTimePicker: React.FC<DateAndTimePickerProps> = ({
         value={dateValue}
         onChange={onDateChange}
         slotProps={{textField: {size: "small", fullWidth: true}}}
+        readOnly={readOnly}
       />
       <Box sx={{display: "flex", alignItems: "center", gap: 2}}>
         <TimePicker
@@ -42,6 +45,7 @@ export const DateAndTimePicker: React.FC<DateAndTimePickerProps> = ({
           value={timeValue}
           onChange={onTimeChange}
           slotProps={{textField: {size: "small"}}}
+          readOnly={readOnly}
         />
         <FormControlLabel
           label="Strict Cutoff"
@@ -49,7 +53,7 @@ export const DateAndTimePicker: React.FC<DateAndTimePickerProps> = ({
           control={
             <Checkbox
               checked={strictCutoff}
-              onChange={(e) => onStrictCutoffChange(e.target.checked)}
+              onChange={(e) => readOnly || onStrictCutoffChange(e.target.checked)}
             />
           }
         />

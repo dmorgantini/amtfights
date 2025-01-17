@@ -16,9 +16,10 @@ const categoryOptions = [
 
 interface CategorySelectorProps {
   onCategoriesChange?: (categories: string[]) => void; // Callback when categories change
+  readOnly: boolean;
 }
 
-const CategorySelector: React.FC<CategorySelectorProps> = ({ onCategoriesChange }) => {
+const CategorySelector: React.FC<CategorySelectorProps> = ({onCategoriesChange, readOnly}) => {
   const [selectedCategories, setSelectedCategories] = React.useState<string[]>([]);
 
   // Handle selection of a new category
@@ -41,32 +42,32 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({ onCategoriesChange 
   return (
     <Box>
       {/* AutoComplete dropdown with typeahead */}
-      <Autocomplete
-        multiple
-        options={categoryOptions}
-        value={selectedCategories}
-        onChange={handleAddCategory}
-        renderTags={() => null}
-        size="small"
-        sx={{ mt: 4 }}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            variant="outlined"
-            label="Select Categories"
-            placeholder="Type to search"
-          />
-        )}
-        disableCloseOnSelect
-      />
+      {readOnly || <Autocomplete
+          multiple
+          options={categoryOptions}
+          value={selectedCategories}
+          onChange={handleAddCategory}
+          renderTags={() => null}
+          size="small"
+          sx={{mt: 4}}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              variant="outlined"
+              label="Select Categories"
+              placeholder="Type to search"
+            />
+          )}
+          disableCloseOnSelect
+      />}
       {/* Display selected categories as pills */}
       <Box mt={2}>
         {selectedCategories.map((category) => (
           <Chip
             key={category}
             label={category}
-            onDelete={() => handleDeleteCategory(category)}
-            sx={{ mr: 1, mb: 1 }}
+            onDelete={() => readOnly || handleDeleteCategory(category)}
+            sx={{mr: 1, mb: 1}}
           />
         ))}
       </Box>
