@@ -40,9 +40,9 @@ export default function HostATournamentPage() {
     : "";
 
   return (
-<Box sx={{ width: "100%", maxWidth: 600, mx: "auto", gap: 2, paddingBottom: 4 }}>
+    <Box sx={{width: "100%", maxWidth: 600, mx: "auto", gap: 2, paddingBottom: 4}}>
 
-<Typography variant="h4" align="center" sx={{ paddingTop: 4, paddingBottom: 4 }}>Host A Tournament</Typography>
+      <Typography variant="h4" align="center" sx={{paddingTop: 4, paddingBottom: 4}}>Host A Tournament</Typography>
       <TextFieldInput
         label="Tournament Name"
         value={formState.name}
@@ -98,7 +98,7 @@ export default function HostATournamentPage() {
         sx={{mt: 2}}
       />
       <FormatFields format={formState.format} formatFieldsValuesUpdated={formatFieldsValuesUpdated}/>
-<CategorySelector onCategoriesChange={(categories) => handleChange("categories", categories)}/>
+      <CategorySelector onCategoriesChange={(categories) => handleChange("categories", categories)}/>
       <FormControls
         isSubmitDisabled={isSubmitDisabled}
         tooltipMessage={tooltipMessage}
