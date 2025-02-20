@@ -1,9 +1,7 @@
-import {
-  Typography,
-} from "@mui/material";
+import {TournamentForm} from "./components/tournamentForm.tsx";
 
-export default function TournamentPage() {
+export default function HostATournamentPage() {
   return (
-    <Typography>Tournament Page</Typography>
+      <TournamentForm readOnly={true}/>
   );
 }
