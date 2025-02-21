@@ -5,6 +5,7 @@ import {FormControl, InputLabel, MenuItem, Select} from "@mui/material";
 interface FormatFieldsProps {
   format: string; // Format configuration object
   formatFieldsValuesUpdated: (isComplete: boolean, values: Record<string, string>) => void;
+  formatSpecificFields: Record<string, string>;
   readOnly: boolean;
 }
 
@@ -42,8 +43,8 @@ const formats: Formats = {
   ]
 }
 
-const FormatFields: React.FC<FormatFieldsProps> = ({format, formatFieldsValuesUpdated, readOnly}) => {
-  const [values, setValues] = React.useState<Record<string, string>>({});
+const FormatFields: React.FC<FormatFieldsProps> = ({format, formatFieldsValuesUpdated, readOnly, formatSpecificFields}) => {
+  const [values, setValues] = React.useState<Record<string, string>>({...formatSpecificFields});
   const formatConfig = formats[format];
 
   React.useEffect(() => {

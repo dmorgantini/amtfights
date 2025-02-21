@@ -1,5 +1,6 @@
 import React from "react";
 import {Autocomplete, Box, Chip, TextField} from "@mui/material";
+import Typography from "@mui/material/Typography";
 
 // List of predefined category options
 const categoryOptions = [
@@ -16,11 +17,12 @@ const categoryOptions = [
 
 interface CategorySelectorProps {
   onCategoriesChange?: (categories: string[]) => void; // Callback when categories change
+  categories?: string[],
   readOnly: boolean;
 }
 
-const CategorySelector: React.FC<CategorySelectorProps> = ({onCategoriesChange, readOnly}) => {
-  const [selectedCategories, setSelectedCategories] = React.useState<string[]>([]);
+const CategorySelector: React.FC<CategorySelectorProps> = ({onCategoriesChange, readOnly, categories}) => {
+  const [selectedCategories, setSelectedCategories] = React.useState<string[]>(categories || []);
 
   // Handle selection of a new category
   const handleAddCategory = (_: React.SyntheticEvent, newValue: string[]) => {
@@ -42,23 +44,23 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({onCategoriesChange, 
   return (
     <Box>
       {/* AutoComplete dropdown with typeahead */}
-      {readOnly || <Autocomplete
-          multiple
-          options={categoryOptions}
-          value={selectedCategories}
-          onChange={handleAddCategory}
-          renderTags={() => null}
-          size="small"
-          sx={{mt: 4}}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              variant="outlined"
-              label="Select Categories"
-              placeholder="Type to search"
-            />
-          )}
-          disableCloseOnSelect
+      {readOnly ? <Typography variant="subtitle1" align="left" sx={{paddingTop: 1}}>Categories</Typography> : <Autocomplete
+        multiple
+        options={categoryOptions}
+        value={selectedCategories}
+        onChange={handleAddCategory}
+        renderTags={() => null}
+        size="small"
+        sx={{mt: 4}}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            variant="outlined"
+            label="Select Categories"
+            placeholder="Type to search"
+          />
+        )}
+        disableCloseOnSelect
       />}
       {/* Display selected categories as pills */}
       <Box mt={2}>

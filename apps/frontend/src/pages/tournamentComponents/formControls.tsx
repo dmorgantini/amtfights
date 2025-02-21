@@ -3,10 +3,11 @@ import Stack from "@mui/material/Stack";
 import {Button} from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
 
-export const FormControls = ({isSubmitDisabled, tooltipMessage, readOnly}: {
+export const FormControls = ({isSubmitDisabled, tooltipMessage, readOnly, handleFormSubmit}: {
   isSubmitDisabled: boolean;
   tooltipMessage: string;
   readOnly: boolean;
+  handleFormSubmit?: () => void;
 }) => {
   const [showTooltip, setShowTooltip] = React.useState(false);
 
@@ -33,6 +34,7 @@ export const FormControls = ({isSubmitDisabled, tooltipMessage, readOnly}: {
               variant="outlined"
               color="primary"
               disabled={isSubmitDisabled}
+              onClick={handleFormSubmit}
           >
             Submit
           </Button>

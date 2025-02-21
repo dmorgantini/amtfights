@@ -6,21 +6,45 @@ import {DateAndTimePicker} from "./dateAndTimePicker.tsx";
 import FormatFields from "./FormatFields.tsx";
 import CategorySelector from "./categorySelector.tsx";
 import {FormControls} from "./formControls.tsx";
+import {Dayjs} from "dayjs";
 
-export function TournamentForm({readOnly}: { readOnly: boolean }) {
-  const [formState, setFormState] = React.useState({
-    formatSpecificFields: {},
-    formatSpecificFieldsComplete: false,
-    name: "",
-    description: "",
-    kingdom: "",
-    park: "",
-    date: null,
-    registrationCutoff: null,
-    strictCutoff: false,
-    format: "",
-    categories: [],
-  });
+
+export type TournamentFormState = {
+  formatSpecificFields: Record<string, string>;
+  formatSpecificFieldsComplete: boolean;
+  name: string;
+  description: string;
+  kingdom: string;
+  park: string;
+  date: Dayjs | null;
+  registrationCutoff: Dayjs | null;
+  strictCutoff: boolean;
+  format: string;
+  categories: string[];
+};
+
+const initialFormState: TournamentFormState = {
+  formatSpecificFields: {},
+  formatSpecificFieldsComplete: false,
+  name: "",
+  description: "",
+  kingdom: "",
+  park: "",
+  date: null,
+  registrationCutoff: null,
+  strictCutoff: false,
+  format: "",
+  categories: [],
+};
+
+export function TournamentForm({readOnly, initialValues, pageTitle, handleFormSubmit}: {
+  readOnly: boolean,
+  initialValues?: Partial<TournamentFormState>
+  pageTitle?: string;
+  handleFormSubmit?: () => void;
+}) {
+
+  const [formState, setFormState] = React.useState({...initialFormState, ...initialValues});
 
   const handleChange = (field: string, value: unknown) => setFormState({...formState, [field]: value});
 
@@ -42,7 +66,7 @@ export function TournamentForm({readOnly}: { readOnly: boolean }) {
   return (
     <Box sx={{width: "100%", maxWidth: 600, mx: "auto", gap: 2, paddingBottom: 4}}>
 
-      <Typography variant="h4" align="center" sx={{paddingTop: 4, paddingBottom: 4}}>Host A Tournament</Typography>
+      <Typography variant="h4" align="center" sx={{paddingTop: 4, paddingBottom: 4}}>{pageTitle}</Typography>
       <TextFieldInput
         label="Tournament Name"
         value={formState.name}
@@ -103,11 +127,14 @@ export function TournamentForm({readOnly}: { readOnly: boolean }) {
         sx={{mt: 2}}
         readOnly={readOnly}
       />
-      <FormatFields format={formState.format} formatFieldsValuesUpdated={formatFieldsValuesUpdated}
+      <FormatFields format={formState.format} formatSpecificFields={formState.formatSpecificFields}
+                    formatFieldsValuesUpdated={formatFieldsValuesUpdated}
                     readOnly={readOnly}/>
-      <CategorySelector onCategoriesChange={(categories) => handleChange("categories", categories)}
+      <CategorySelector categories={formState.categories}
+                        onCategoriesChange={(categories) => handleChange("categories", categories)}
                         readOnly={readOnly}/>
       <FormControls
+        handleFormSubmit={handleFormSubmit} // TODO: send in the deets
         isSubmitDisabled={isSubmitDisabled}
         tooltipMessage={tooltipMessage}
         readOnly={readOnly}
